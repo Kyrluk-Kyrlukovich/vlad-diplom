@@ -1,7 +1,18 @@
 <script setup>
 import {ref} from "vue";
+import { useUserStore } from "../store";
+import { RouterLink } from "vue-router";
+import { logout } from "../requests/user";
+
+const userStore = useUserStore();
 
 const searchValue = ref('')
+
+async function handleLogout() {
+    await logout();
+
+    userStore.setIsLoginUser(false)
+}
 </script>
 
 <template>
@@ -20,16 +31,31 @@ const searchValue = ref('')
         <router-link to="/cart" class="cart">
                 <el-icon :size="17"><ShoppingCartFull /></el-icon>
         </router-link>
-        <div class="profile">
-            <el-avatar shape="square" size="40" src="https://i.pinimg.com/736x/ab/30/db/ab30db21e95215bdfbabb8010e357298.jpg" />
-            <div>
-                Влад Лыков
-            </div>
+        <el-dropdown trigger="click" v-if="userStore.isLoginUser && userStore.user">
+            <span class="profile">
+                <el-avatar shape="square" size="40" src="https://i.pinimg.com/736x/ab/30/db/ab30db21e95215bdfbabb8010e357298.jpg" />
+                <div>
+                    {{ userStore.user.name }}
+                </div>
+            </span>
+            <template #dropdown>
+                <div class="user-dropdown">
+                    <el-dropdown-menu>
+                        <el-dropdown-item @click="handleLogout">Выйти</el-dropdown-item>
+                    </el-dropdown-menu>
+                </div>
+            </template>
+        </el-dropdown>
+        <div v-else class="no-authorized">
+            <RouterLink to="/auth">Войти</RouterLink>
+            <div>/</div>
+            <RouterLink to="/signup">Зарегистрироваться</RouterLink>
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
+
 .header {
     display: flex;
     align-items: center;
@@ -59,6 +85,11 @@ const searchValue = ref('')
         & :deep(.el-avatar) {
             flex-shrink: 0;
         }
+    }
+
+    .no-authorized {
+        display: flex;
+        gap: 5px;
     }
 }
 </style>

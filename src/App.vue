@@ -5,6 +5,8 @@ import Footer from "./components/Footer.vue";
 import Main from "./components/Main.vue";
 import {ref, computed} from "@vue/reactivity"
 import Cart from "./components/Cart.vue";
+import { profile } from "./requests/user";
+import { useUserStore } from "./store";
 
 const tabs = reactive([
     {
@@ -18,11 +20,23 @@ const tabs = reactive([
 ])
 
 const activeTabCode = ref('main')
+const isAuthUser = ref(false);
+const userStore = useUserStore();
 const getActiveTab = computed(() => {
     return tabs.find(tab => tab.code === activeTabCode.value)
 })
 
-console.log(getActiveTab.value.component)
+async function handleProfile() {
+    try {
+        const data = await profile();
+        userStore.setUser(data.data)
+    } catch (e) {
+        isAuthUser.value = false
+    }
+}
+
+handleProfile();
+
 </script>
 
 <template>

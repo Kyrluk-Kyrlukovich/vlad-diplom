@@ -1,4 +1,18 @@
 <script setup>
+import { reactive } from 'vue';
+import { signup } from '../requests/user';
+
+const form = reactive({
+    name: "",
+    emai: "",
+    password: "",
+    password_confirmation: ""
+})
+
+async function handleSignup() {
+    const data = await signup(form);
+}
+
 
 </script>
 
@@ -6,12 +20,27 @@
     <div class="auth-form">
         <h2>Регистрация</h2>
         <div class="inputs-form">
-            <el-input size="large" placeholder="Фамилия" />
-            <el-input size="large" placeholder="Имя" />
-            <el-input size="large" placeholder="Отчество" />
-            <el-input size="large" placeholder="email" />
-            <el-input size="large" placeholder="пароль" />
-            <el-button size="large" plain >Зарегистрироваться</el-button>
+            <el-input v-model="form.name" 
+                size="large" 
+                placeholder="ФИО" />
+            <el-input 
+                v-model="form.email" 
+                size="large"
+                type="email" 
+                placeholder="email" />
+            <el-input 
+                v-model="form.password" 
+                size="large" 
+                placeholder="пароль" 
+                type="password"
+                show-password/>
+            <el-input 
+                v-model="form.password_confirmation" 
+                size="large" 
+                placeholder="Потверждение пароля" 
+                type="password"
+                show-password />
+            <el-button @click="handleSignup" size="large" plain >Зарегистрироваться</el-button>
         </div>
     </div>
 </template>

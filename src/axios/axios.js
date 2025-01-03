@@ -1,5 +1,8 @@
-const instance = axios.create({
-    baseURL: 'https://some-domain.com/api/',
-    timeout: 1000,
+export const instance = axios.create({
+    baseURL: 'http://vlad-diplom-backend/api/',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    },
     withCredentials: true,
 });

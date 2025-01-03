@@ -28,3 +28,16 @@ body {
   display: flex;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+
+  &:visited {
+    color: inherit;
+  }
+
+  &:hover {
+    color: inherit;
+  }
+}
+

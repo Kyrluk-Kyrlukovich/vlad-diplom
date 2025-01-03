@@ -1,34 +1,86 @@
 <script setup>
+import { computed } from 'vue';
+import { updateCartProuductDetail, cart, removeCartProuduct, addOrder } from '../requests/cart';
+import { el } from 'element-plus/es/locales.mjs';
 
+const cartData = ref([])
+const isAllChoosen = computed(() => cartData.value.every(el => el.isChoosen))
+
+async function handleGetCartProducts() {
+    const data = await cart();
+    cartData.value = data.data
+}
+
+async function handleUpdateQuantity(id, count = 1) {
+    await updateCartProuductDetail(id, {
+        quantity: count
+    });
+}
+
+async function handleRemoveCartProuduct(id) {
+    await removeCartProuduct(id);
+    await handleGetCartProducts();
+}
+
+async function handleCreateOrder() {
+    const filtered = cartData.value.filter(el => el.isChoosen).map(el => {
+        return {
+           product_id: el.product.id,
+           quantity: el.quantity
+        }
+    })
+    await addOrder({ items: filtered});
+}
+
+handleGetCartProducts();
 </script>
 
 <template>
-    <div>
+    <div class="cart-actions">
         <el-checkbox
-            :indeterminate="true"
+            :indeterminate="!isAllChoosen"
+            v-model="isAllChoosen"
+            @change="(value) => {
+                if(value) {
+                    cartData.forEach(el => {
+                        el.isChoosen = true
+                    })
+                } else {
+                    cartData.forEach(el => {
+                        el.isChoosen = false
+                    })
+                }
+            }"
         >
             Выбрать все
         </el-checkbox>
+        <el-button class="order-checkout" @click="handleCreateOrder">Оформить заказ</el-button>
     </div>
     <div class="cart-list">
-        <div v-for="item in 10" class="cart-item">
+        <div v-for="item in cartData" :key="item.product.id" class="cart-item">
             <el-checkbox
-
-                :indeterminate="true"
+                v-model="item.isChoosen"
             >
             </el-checkbox>
             <el-image src="https://avatars.mds.yandex.net/i?id=ca9cf06436fde06a800e87bb3711d167_l-10599899-images-thumbs&n=13" />
             <div class="cart-description">
-                <div>Описание:</div>
-                <div>Описание Описание Описание Описание Описание Описание Описание Описание</div>
+                <div class="cart-name">{{ item.product.name }}</div>
+                <div>Артикул: {{ item.product.sku }}</div>
+                <div>Описание: {{ item.product.description }}</div>
             </div>
             <div class="cart-price">
-                ₽ 12500
+                ₽ {{ item.product.price }}
             </div>
             <div>
-                <el-input-number  :min="1" :max="10" />
+                <el-input-number 
+                    v-model="item.quantity" 
+                    @input="(value) => {
+                            handleUpdateQuantity(item.product.id, value)
+                        }"  
+                    :min="1" 
+                    :max="10" />
             </div>
-            <div class="cart-delete">
+            <div class="cart-delete" @click="handleRemoveCartProuduct(item.product.id)">
                 <el-icon><Delete /></el-icon>
             </div>
         </div>
@@ -36,6 +88,15 @@
 </template>
 
 <style lang="scss" scoped>
+
+.order-checkout {
+    margin-left: auto;
+}
+
+.cart-actions {
+    display: flex;
+    margin-bottom: 1rem;
+}
 
 .cart-list {
     display: flex;
@@ -56,6 +117,11 @@
     border: 1px solid black;
 }
 
+.cart-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
 :deep(.el-image) {
     width: 200px;
     border-radius: 16px;
@@ -64,6 +130,7 @@
 
 .cart-price {
     flex-shrink: 0;
+    margin-left: auto;
 }
 
 .cart-delete {

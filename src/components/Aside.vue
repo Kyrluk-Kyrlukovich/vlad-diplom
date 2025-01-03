@@ -24,11 +24,17 @@
                 <span>Избранное</span>
             </template>
         </el-menu-item>
+        <el-menu-item @click="router.push('/orders')">
+            <template #title>
+                <el-icon><clipboard-document-check-icon /></el-icon>
+                <span>Мои заказы</span>
+            </template>
+        </el-menu-item>
     </el-menu>
 </template>
 <script setup>
 import {useRouter} from "vue-router";
-import {HeartIcon} from "@heroicons/vue/24/solid/index.js";
+import {HeartIcon, ClipboardDocumentCheckIcon} from "@heroicons/vue/24/solid/index.js";
 
 const router = useRouter();
 </script>

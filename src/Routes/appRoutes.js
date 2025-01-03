@@ -3,6 +3,8 @@ import Cart from "../components/Cart.vue";
 import Favorites from "../components/Favorites.vue";
 import Auth from "../components/Auth.vue";
 import Signup from "../components/Signup.vue";
+import Checkout from "../components/Checkout.vue";
+import Orders from "../components/Orders.vue";
 
 const appRoutes = [
     {
@@ -29,6 +31,16 @@ const appRoutes = [
         path: '/signup',
         name: 'signup',
         component: Signup
+    },
+    {
+        path: '/order/:id',
+        name: 'order',
+        component: Checkout
+    },
+    {
+        path: '/orders',
+        name: 'orders',
+        component: Orders
     },
 ]
 
