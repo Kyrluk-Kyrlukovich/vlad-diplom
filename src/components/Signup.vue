@@ -1,7 +1,9 @@
 <script setup>
 import { reactive } from 'vue';
 import { signup } from '../requests/user';
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 const form = reactive({
     name: "",
     emai: "",
@@ -41,11 +43,16 @@ async function handleSignup() {
                 type="password"
                 show-password />
             <el-button @click="handleSignup" size="large" plain >Зарегистрироваться</el-button>
+            <el-button @click="router.push('/auth')" size="large" plain >Войти</el-button>
         </div>
     </div>
 </template>
 
 <style scoped>
+
+:global(.el-button + .el-button) {
+    margin-left: 0;
+}
 .auth-form {
     display: flex;
     height: 100%;

@@ -36,4 +36,11 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
+  esbuild: {
+    // Включаем поддержку всех современных возможностей JavaScript
+    target: 'esnext', // Поддержка современных возможностей JS
+  },
+  build: {
+    target: 'esnext', // сборка с поддержкой современных браузеров
+  },
 });

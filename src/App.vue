@@ -7,6 +7,7 @@ import {ref, computed} from "@vue/reactivity"
 import Cart from "./components/Cart.vue";
 import { profile } from "./requests/user";
 import { useUserStore } from "./store";
+import { useRouter } from "vue-router";
 
 const tabs = reactive([
     {
@@ -21,9 +22,23 @@ const tabs = reactive([
 
 const activeTabCode = ref('main')
 const isAuthUser = ref(false);
+const router = useRouter()
 const userStore = useUserStore();
 const getActiveTab = computed(() => {
     return tabs.find(tab => tab.code === activeTabCode.value)
+})
+
+router.beforeEach((to, from, next) => {
+    const authRoutes = [
+        'cart',
+        'favorites',
+        'orders',
+        'order',
+    ]
+
+    if(authRoutes.includes(to.name) && !userStore.isLoginUser) {
+        next({ name: 'auth' })
+    } else next()
 })
 
 async function handleProfile() {

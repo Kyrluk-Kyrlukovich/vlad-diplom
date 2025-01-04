@@ -3,6 +3,7 @@ import { reactive } from 'vue';
 import { auth } from '../requests/user';
 import { useUserStore } from '../store';
 import { useRouter } from 'vue-router';
+import { getToken, instance } from '../axios/axios';
 
 const userStore = useUserStore();
 const router = useRouter()
@@ -15,6 +16,12 @@ const form = reactive({
 async function handleAuth() {
     const data = await auth(form);
     localStorage.setItem('token', data.data.access_token)
+
+    console.log('instance.headers.Authorization', instance.defaults.headers.Authorization)
+
+    if (instance.defaults.headers && instance.defaults.headers.Authorization)  {
+        instance.defaults.headers.Authorization = `Bearer ${getToken()}`;
+    }
 
     userStore.setIsLoginUser(Boolean(localStorage.getItem('token')))
     router.push('/')
@@ -33,6 +40,7 @@ async function handleAuth() {
                 show-password 
                 placeholder="пароль" />
             <el-button @click="handleAuth" size="large" plain >Авторизоваться</el-button>
+            <el-button @click="router.push('/signup')" size="large" plain >Зарегистрироваться</el-button>
         </div>
     </div>
 </template>
