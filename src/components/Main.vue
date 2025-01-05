@@ -5,10 +5,12 @@ import { addToFavorites, deleteProduct, product, products, updateProduct } from 
 import { ref } from "vue";
 import { addToCart } from "../requests/cart";
 import { categories } from "../requests/categories";
+import { useUserStore } from "../store";
 
 const productsData = ref([])
 const productEdit = ref(null)
 const categoriesData = ref([])
+const userStore = useUserStore()
 
 const isOpenEditDrawer = ref(false)
 
@@ -93,7 +95,7 @@ handleProducts();
                 <div class="card-header">
                     <span>{{ product.name }}</span>
                     <span class="products-stock">50%</span>
-                    <el-dropdown ref="dropdown1" trigger="click">
+                    <el-dropdown v-if="userStore.isAdmin" trigger="click">
                         <div class="more">
                             <el-icon><MoreFilled /></el-icon>
                         </div>

@@ -1,10 +1,13 @@
-import { ref } from "@vue/reactivity"
+import { computed, ref } from "@vue/reactivity"
 import { defineStore } from 'pinia'
 
 
 export const useUserStore = defineStore('user', () => {
   const isLoginUser = ref(Boolean(localStorage.getItem('token')));
   const user = ref(null);
+  const isAdmin = computed(() => user.value && user.value.role === 'admin')
+
+
   const setUser = (value) => {
     user.value = value
   }
@@ -12,5 +15,11 @@ export const useUserStore = defineStore('user', () => {
     isLoginUser.value = value
   }
 
-  return { isLoginUser, setIsLoginUser, user, setUser}
+  return { 
+    isLoginUser, 
+    setIsLoginUser, 
+    user, 
+    setUser,
+    isAdmin
+  }
 })
