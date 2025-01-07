@@ -1,6 +1,6 @@
 <script setup>
 import { HeartIcon } from "@heroicons/vue/24/solid"
-import { HeartIcon as HeartIconOutline  } from "@heroicons/vue/24/outline"
+import { HeartIcon as HeartIconOutline, PhotoIcon  } from "@heroicons/vue/24/outline"
 import { addToFavorites, deleteProduct, product, products, updateProduct } from "../requests/products";
 import { ref } from "vue";
 import { addToCart } from "../requests/cart";
@@ -114,7 +114,8 @@ handleProducts();
                 </div>
             </template>
             <div class="products-body">
-                <el-image src="https://avatars.mds.yandex.net/i?id=ca9cf06436fde06a800e87bb3711d167_l-10599899-images-thumbs&n=13" />
+                <PhotoIcon></PhotoIcon>
+                <el-image v-if="false" src="https://avatars.mds.yandex.net/i?id=ca9cf06436fde06a800e87bb3711d167_l-10599899-images-thumbs&n=13" />
                 <div>Описание: {{ product.description }}</div>
                 <el-check-tag class="products-category" checked>{{product.category.name}}</el-check-tag>
             </div>

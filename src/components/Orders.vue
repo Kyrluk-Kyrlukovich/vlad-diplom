@@ -12,6 +12,12 @@
                 @click="handleUpdateOrderStatus(order.id, getStatus(order.status).status)">
                 {{ getStatus(order.status).textBtn }}
               </el-button>
+              <el-button 
+                v-if="userStore.isAdmin && order.status !== 'canceled'" 
+                type="danger"
+                @click="handleUpdateOrderStatus(order.id, 'canceled')">
+                 Отменить 
+              </el-button>
               <span class="orders-header__price">₽ {{ order.total_price}}</span>
             </div>
           </template>
@@ -22,16 +28,22 @@
               <p>{{ userStore.user.name }} создал заказ {{ dayjs(order.created_at).format('DD.MM.YYYY hh:mm') }}</p>
             </el-card>
           </el-timeline-item>
-          <el-timeline-item v-if="order.status == 'pending'" timestamp="2018/4/3" placement="top">
+          <el-timeline-item v-if="order.pending_at || order.completed_at" :timestamp="dayjs(order.pending_at).format('DD.MM.YYYY hh:mm')" placement="top">
             <el-card>
-              <h4>Update Github template</h4>
-              <p>Tom committed 2018/4/3 20:46</p>
+              <h4>Заказ ожидает доставки</h4>
+              <p>Статус обновлен {{ dayjs(order.pending_at).format('DD.MM.YYYY hh:mm') }}</p>
             </el-card>
           </el-timeline-item>
-          <el-timeline-item v-if="false" timestamp="2018/4/2" placement="top">
+          <el-timeline-item v-if="order.completed_at" :timestamp="dayjs(order.completed_at).format('DD.MM.YYYY hh:mm')" placement="top">
             <el-card>
-              <h4>Update Github template</h4>
-              <p>Tom committed 2018/4/2 20:46</p>
+              <h4>Заказ доставлен</h4>
+              <p>Статус обновлен {{ dayjs(order.completed_at).format('DD.MM.YYYY hh:mm') }}</p>
+            </el-card>
+          </el-timeline-item>
+          <el-timeline-item v-if="order.canceled_at" :timestamp="dayjs(order.canceled_at).format('DD.MM.YYYY hh:mm')" placement="top">
+            <el-card>
+              <h4>Заказ отменен</h4>
+              <p>Менеджер отменил ваш заказ {{ dayjs(order.canceled_at).format('DD.MM.YYYY hh:mm') }}</p>
             </el-card>
           </el-timeline-item>
         </el-timeline>
@@ -42,7 +54,7 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-import { orders, updateOrderStatus } from '../requests/orders';
+import { allOrders, orders, updateOrderStatus } from '../requests/orders';
 import dayjs from 'dayjs';
 import { useUserStore } from '../store';
 
@@ -67,18 +79,14 @@ const getStatus = (status) => {
       case 'completed':
         return null;
       case 'canceled':
-        return {
-          textBtn: 'Отменить',
-          typeBtn: 'danger',
-          status: 'canceled',
-        };
+        return null;
       default:
         return null;
     }
 }
 
 async function handleOrders() {
-  const {data} = await orders();
+  const {data} = userStore.isAdmin ? await allOrders() : await orders();
 
   orderData.value = data.data
 }

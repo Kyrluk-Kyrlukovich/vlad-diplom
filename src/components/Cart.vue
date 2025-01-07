@@ -62,7 +62,9 @@ handleGetCartProducts();
                 v-model="item.isChoosen"
             >
             </el-checkbox>
-            <el-image src="https://avatars.mds.yandex.net/i?id=ca9cf06436fde06a800e87bb3711d167_l-10599899-images-thumbs&n=13" />
+            
+            <PhotoIcon></PhotoIcon>
+            <el-image v-if="false" src="https://avatars.mds.yandex.net/i?id=ca9cf06436fde06a800e87bb3711d167_l-10599899-images-thumbs&n=13" />
             <div class="cart-description">
                 <div class="cart-name">{{ item.product.name }}</div>
                 <div>Артикул: {{ item.product.sku }}</div>
@@ -75,7 +77,7 @@ handleGetCartProducts();
                 <el-input-number 
                     v-model="item.quantity" 
                     @input="(value) => {
-                            handleUpdateQuantity(item.product.id, value)
+                            handleUpdateQuantity(item.id, value)
                         }"  
                     :min="1" 
                     :max="10" />
@@ -115,6 +117,10 @@ handleGetCartProducts();
     height: 120px;
     border-radius: 16px;
     border: 1px solid black;
+
+    svg {
+        height: 100%;
+    }
 }
 
 .cart-name {

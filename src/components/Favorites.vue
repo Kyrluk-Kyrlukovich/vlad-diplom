@@ -36,7 +36,8 @@ handleFavorites();
                 </div>
             </template>
             <div class="products-body">
-                <el-image src="https://avatars.mds.yandex.net/i?id=ca9cf06436fde06a800e87bb3711d167_l-10599899-images-thumbs&n=13" />
+                <PhotoIcon></PhotoIcon>
+                <el-image v-if="false" src="https://avatars.mds.yandex.net/i?id=ca9cf06436fde06a800e87bb3711d167_l-10599899-images-thumbs&n=13" />
                 <div>Описание:</div>
                 <div>
                     {{ favorite.product.description }}

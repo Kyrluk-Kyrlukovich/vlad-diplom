@@ -2,6 +2,8 @@
 import {ref} from "vue";
 import { useUserStore } from "../store";
 import { RouterLink } from "vue-router";
+import { UserCircleIcon } from "@heroicons/vue/24/solid/index.js";
+
 import { logout } from "../requests/user";
 
 const userStore = useUserStore();
@@ -33,7 +35,7 @@ async function handleLogout() {
         </router-link>
         <el-dropdown trigger="click" v-if="userStore.isLoginUser && userStore.user">
             <span class="profile">
-                <el-avatar shape="square" size="40" src="https://i.pinimg.com/736x/ab/30/db/ab30db21e95215bdfbabb8010e357298.jpg" />
+                <user-circle-icon></user-circle-icon>
                 <div>
                     {{ userStore.user.name }}
                 </div>
