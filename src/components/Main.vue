@@ -64,6 +64,8 @@ async function handleUpdateProduct() {
         sku: productEdit.value.sku,
     });
     handleProducts();
+    kyrlukone@gmail.com
+    
 }
 
 async function handleDeleteProduct(id) {
@@ -247,5 +249,8 @@ handleProducts();
 
 :deep(.el-image__inner) {
     border-radius: var(--el-border-radius-base);
+}
+:deep(.el-button + .el-button) {
+    margin-left: 0.5rem !important;
 }
 </style>

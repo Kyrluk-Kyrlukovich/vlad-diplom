@@ -13,17 +13,25 @@ const form = reactive({
     password: ""
 })
 
+async function handleProfile() {
+    try {
+        const data = await profile();
+        userStore.setUser(data.data)
+    } catch (e) {
+        
+    }
+}
+
 async function handleAuth() {
     const data = await auth(form);
     localStorage.setItem('token', data.data.access_token)
-
-    console.log('instance.headers.Authorization', instance.defaults.headers.Authorization)
 
     if (instance.defaults.headers && instance.defaults.headers.Authorization)  {
         instance.defaults.headers.Authorization = `Bearer ${getToken()}`;
     }
 
     userStore.setIsLoginUser(Boolean(localStorage.getItem('token')))
+    await handleProfile()
     router.push('/')
 }
 </script>

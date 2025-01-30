@@ -30,6 +30,7 @@ async function handleCreateOrder() {
         }
     })
     await addOrder({ items: filtered});
+    await handleGetCartProducts();
 }
 
 handleGetCartProducts();
